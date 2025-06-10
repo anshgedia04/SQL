@@ -14,4 +14,4 @@ SELECT SourceOfJoining , MAX(YearsOfExperience) as max_exp FROM learners GROUP B
 
 --give source of joining with avg. experience
 
-SELECT SourceOfJoining , AVG(YearsOfExperience) as max_exp FROM learners GROUP BY SourceOfJoining
+SELECT SourceOfJoining , AVG(YearsOfExperience) as avg_exp FROM learners GROUP BY SourceOfJoining
