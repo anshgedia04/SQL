@@ -23,3 +23,9 @@ SELECT fname, lname, Locations,
 COUNT(Locations) OVER (PARTITION BY Locations) AS Total,
 AVG(Salary) OVER (PARTITION BY Locations) AS AVG_Salary
 FROM emp
+
+
+--window functions 
+--row_rumber 
+
+SELECT fname , lname , salary , ROW_NUMBER() OVER (ORDER BY salary DESC) as Priority_num FROM emp; 
