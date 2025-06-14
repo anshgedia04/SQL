@@ -17,3 +17,9 @@ FROM emp
 INNER JOIN (SELECT Locations , COUNT(*) as total_emps , avg(salary) as avg_salary FROM emp GROUP BY Locations) as temp
 ON emp.Locations = temp.Locations
 
+--use of partition by 
+
+SELECT fname, lname, Locations,
+COUNT(Locations) OVER (PARTITION BY Locations) AS Total,
+AVG(Salary) OVER (PARTITION BY Locations) AS AVG_Salary
+FROM emp
