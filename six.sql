@@ -68,5 +68,44 @@ SELECT Locations , max(salary) as max_sal FROM emp GROUP BY Locations
 
 --2
 SELECT fname , lname , salary , emp.Locations FROM emp 
-JOIN (SELECT Locations , max(salary) as max_salary FROM emp GROUP BY Locations) as sub_query
+INNER JOIN (SELECT Locations , max(salary) as max_salary FROM emp GROUP BY Locations) as sub_query
 ON emp.salary = sub_query.max_salary ; 
+
+
+
+
+--leetcode problem 
+
+--table of score is given 
+
+CREATE TABLE Scores(
+    id INT PRIMARY KEY,
+    score DECIMAL(3,2)
+);
+
+-- Write a solution to find the rank of the scores. The ranking should be calculated according to the following rules:
+
+-- The scores should be ranked from the highest to the lowest.
+
+-- If there is a tie between two scores, both should have the same ranking.
+
+-- After a tie, the next ranking number should be the next consecutive integer value. In other words, there should be no holes between ranks.
+
+-- Return the result table ordered by score in descending order.
+
+INSERT INTO Scores VALUES(1,3.2);
+INSERT INTO Scores VALUES(2,3.65);
+INSERT INTO Scores VALUES(3,3.9);
+INSERT INTO Scores VALUES(4,4);
+INSERT INTO Scores VALUES(5,4.5);
+INSERT INTO Scores VALUES(6,3.9);
+INSERT INTO Scores VALUES(7,4.5);
+
+SELECT * FROM Scores;
+
+--answer 
+
+SELECT *, DENSE_RANK() OVER (ORDER BY score DESC) as rank_number FROM Scores
+
+
+
