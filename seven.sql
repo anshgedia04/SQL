@@ -66,3 +66,33 @@ SELECT acc_id  ,COUNT(transaction_id) as number_trans , sum(value) as total_valu
 
 SELECT * , DENSE_RANK() OVER (ORDER BY total_value DESC) 
 FROM (SELECT acc_id  ,COUNT(transaction_id) as number_trans , sum(value) as total_value  FROM March GROUP BY acc_id) as temp
+
+
+
+
+--new 
+
+we have three tables learners , courses , emp
+SELECT * FROM courses
+
+SELECT * FROM learners
+
+--que give me maximum enrolled course 
+
+SELECT selectedCourses , COUNT(*) as enrolled 
+FROM learners 
+GROUP BY selectedCourses
+ORDER BY enrolled DESC 
+
+--que give me maximum enrolled course , including course name 
+
+
+SELECT courseID , CourseName , enrolled
+FROM Courses
+JOIN (SELECT selectedCourses , COUNT(*) as enrolled 
+FROM learners 
+GROUP BY selectedCourses
+ORDER BY enrolled DESC ) as temp
+ON Courses.courseID = temp.selectedCourses
+
+
