@@ -24,37 +24,6 @@ INSERT INTO Courses (CourseName, CourseDuration, CourseFee)
 VALUES ('Cybersecurity Fundamentals', 9, 10000);
 
 
-CREATE TABLE Students (
-    StudentID INT AUTO_INCREMENT,
-    S_FirstName VARCHAR(50) NOT NULL,
-    S_LastName VARCHAR(50) NOT NULL,
-    S_Email VARCHAR(50) NOT NULL,
-    S_Phone VARCHAR(50) NOT NULL,
-    S_EnrollmentDate TIMESTAMP NOT NULL,
-    Selected_Course INT NOT NULL,
-    Years_of_Exp INT NOT NULL,
-    S_Company VARCHAR(50) NOT NULL,
-    Batch_Start_Date TIMESTAMP NOT NULL,
-    Location VARCHAR(50) NOT NULL,
-    PRIMARY KEY (StudentID)
-);
-
-
-INSERT INTO Students (S_FirstName, S_LastName, S_Email, S_Phone, S_EnrollmentDate, Selected_Course, Years_of_Exp, S_Company, Batch_Start_Date, Location)
-VALUES ('Ankit', 'Sharma', 'ankit.sharma@example.com', '9876543210', NOW(), 1, 2, 'TCS', '2025-07-01 09:00:00', 'Mumbai');
-
-INSERT INTO Students (S_FirstName, S_LastName, S_Email, S_Phone, S_EnrollmentDate, Selected_Course, Years_of_Exp, S_Company, Batch_Start_Date, Location)
-VALUES ('Riya', 'Mehta', 'riya.mehta@example.com', '9123456780', NOW(), 2, 1, 'Infosys', '2025-07-15 09:00:00', 'Ahmedabad');
-
-INSERT INTO Students (S_FirstName, S_LastName, S_Email, S_Phone, S_EnrollmentDate, Selected_Course, Years_of_Exp, S_Company, Batch_Start_Date, Location)
-VALUES ('Karan', 'Patel', 'karan.patel@example.com', '9988776655', NOW(), 3, 3, 'Wipro', '2025-08-01 09:00:00', 'Surat');
-
-INSERT INTO Students (S_FirstName, S_LastName, S_Email, S_Phone, S_EnrollmentDate, Selected_Course, Years_of_Exp, S_Company, Batch_Start_Date, Location)
-VALUES ('Pooja', 'Desai', 'pooja.desai@example.com', '9090909090', NOW(), 4, 0, 'Capgemini', '2025-08-15 09:00:00', 'Pune');
-
-INSERT INTO Students (S_FirstName, S_LastName, S_Email, S_Phone, S_EnrollmentDate, Selected_Course, Years_of_Exp, S_Company, Batch_Start_Date, Location)
-VALUES ('Aman', 'Verma', 'aman.verma@example.com', '9012345678', NOW(), 5, 5, 'Accenture', '2025-09-01 09:00:00', 'Bangalore');
-
 
 CREATE TABLE Learners (
     Learner_Id INT AUTO_INCREMENT,
