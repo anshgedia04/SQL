@@ -72,3 +72,14 @@ SELECT state , MAX(shipping_cost) as ship_cost FROM sales_data GROUP BY state OR
 
 --3
 SELECT state , MAX(shipping_cost) as ship_cost FROM sales_data GROUP BY state ORDER BY ship_cost DESC LIMIT 3
+
+
+
+--CTE
+WITH states as(
+ SELECT state , MAX(shipping_cost) as ship_cost 
+ FROM sales_data 
+ GROUP BY state 
+ ORDER BY ship_cost DESC 
+ LIMIT 3
+ )SELECT * FROM states;

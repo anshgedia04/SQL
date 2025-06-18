@@ -101,3 +101,35 @@ FROM
 JOIN learners
 ON learners.Learner_Id = temp.Order_Learner_Id
 GROUP BY temp.Order_Learner_Id
+
+
+
+--CTE COMES IN
+
+  SELECT LearnerFirstName , LearnerLastName , Order_Learner_Id ,total_orders ,  
+(SELECT AVG(order_count) 
+   FROM (
+     SELECT COUNT(*) AS order_count 
+     FROM orders 
+     GROUP BY Order_Learner_Id
+   ) AS subquery) AS average_orders_per_learner
+FROM learners
+JOIN (SELECT Order_Learner_Id , Count(Order_Learner_Id) as total_orders FROM orders GROUP BY Order_Learner_Id) as temp
+ON learners.Learner_Id = temp.Order_Learner_Id
+
+
+--
+WITH Premium_user as(
+
+  SELECT LearnerFirstName , LearnerLastName , Order_Learner_Id ,total_orders ,  
+(SELECT AVG(order_count) 
+   FROM (
+     SELECT COUNT(*) AS order_count 
+     FROM orders 
+     GROUP BY Order_Learner_Id
+   ) AS subquery) AS average_orders_per_learner
+FROM learners
+JOIN (SELECT Order_Learner_Id , Count(Order_Learner_Id) as total_orders FROM orders GROUP BY Order_Learner_Id) as temp
+ON learners.Learner_Id = temp.Order_Learner_Id
+
+)SELECT LearnerFirstName , LearnerLastName FROM Premium_user where total_orders > average_orders_per_learner;
