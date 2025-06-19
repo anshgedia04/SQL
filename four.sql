@@ -1,7 +1,7 @@
 USE TECH_COM;
 
 SELECT * FROM learners
-
+SELECT * FROM courses
 SELECT  COUNT(*) FROM learners
 
 --group by 

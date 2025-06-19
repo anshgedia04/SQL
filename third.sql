@@ -97,7 +97,6 @@ VALUES (
 SELECT * FROM courses;
 SELECT * FROM learners;
 
-SELECT * from students ; 
 
 
 SELECT * FROM emp ;
