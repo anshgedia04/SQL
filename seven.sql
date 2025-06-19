@@ -19,7 +19,7 @@ CREATE TABLE March (
     acc_id INT,
     transaction_id INT PRIMARY KEY,
     value DECIMAL(10, 2),
-    FOREIGN KEY (acc_id) REFERENCES Users(id)
+    FOREIGN KEY(acc_id) REFERENCES Users(id)
 );
 
 -- Insert sample data into March
