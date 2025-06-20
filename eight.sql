@@ -6,9 +6,7 @@ SELECT * FROM courses
 
 
 SELECT CourseID, CourseName, CourseFee,
-
     CASE
-
         WHEN CourseFee > 3999 THEN 'Expensive Course'
 
         WHEN CourseFee > 1499 THEN 'Moderate Course'
