@@ -226,3 +226,151 @@ GROUP BY
 
 
 
+--que
+
+-- You are given two tables: Signups and Confirmations.
+
+-- Each row in Signups represents a user who signed up.
+
+-- Each row in Confirmations represents a confirmation message requested by a user, with status 'confirmed' or 'timeout'.
+
+-- Write a query to return the confirmation rate for each user, defined as:
+
+-- ini
+-- Copy
+-- Edit
+-- confirmation_rate = confirmed messages / total confirmation messages
+-- If a user has no confirmation requests, their confirmation rate should be 0.00.
+
+-- Round the confirmation rate to 2 decimal places.
+
+-- Return the result sorted by user_id.
+
+use leetcode;
+
+CREATE TABLE Signups (
+    user_id INT PRIMARY KEY,
+    time_stamp DATETIME
+);
+
+CREATE TABLE Confirmations (
+    user_id INT,
+    time_stamp DATETIME,
+    action ENUM('confirmed', 'timeout'),
+    PRIMARY KEY (user_id, time_stamp),
+    FOREIGN KEY (user_id) REFERENCES Signups(user_id)
+);
+INSERT INTO Signups (user_id, time_stamp) VALUES
+(3, '2020-03-21 10:16:13'),
+(7, '2020-01-04 13:57:59'),
+(2, '2020-07-29 23:09:44'),
+(6, '2020-12-09 10:39:37');
+
+INSERT INTO Confirmations (user_id, time_stamp, action) VALUES
+(3, '2021-01-06 03:30:46', 'timeout'),
+(3, '2021-07-14 14:00:00', 'timeout'),
+(7, '2021-06-12 11:57:29', 'confirmed'),
+(7, '2021-06-13 12:58:28', 'confirmed'),
+(7, '2021-06-14 13:59:27', 'confirmed'),
+(2, '2021-01-22 00:00:00', 'confirmed'),
+(2, '2021-02-28 23:59:59', 'timeout');
+
+
+select * from Signups
+select * from Confirmations
+
+
+--step 1
+select user_id , 
+        COUNT(CASE WHEN c.action = 'confirmed' THEN 1 END) as CNF , 
+        COUNT(c.action) as total_action
+FROM Confirmations c
+GROUP BY user_id ;
+
+--step 2
+SELECT s.user_id ,
+        ROUND(CNF/total_action,2) as CONFORMATION_RATE
+FROM Signups s
+LEFT OUTER JOIN (select user_id , 
+                        COUNT(CASE WHEN c.action = 'confirmed' THEN 1 END) as CNF , 
+                        COUNT(c.action) as total_action
+                FROM Confirmations c
+                GROUP BY user_id) as temp
+ON s.user_id = temp.user_id
+
+
+use leetcode
+--que
+
+CREATE TABLE Prices (
+    product_id INT,
+    start_date DATE,
+    end_date DATE,
+    price INT
+);
+
+CREATE TABLE UnitsSold (
+    product_id INT,
+    purchase_date DATE,
+    units INT
+);
+
+-- Insert data into Prices table
+INSERT INTO Prices (product_id, start_date, end_date, price) VALUES
+(1, '2019-02-17', '2019-02-28', 5),
+(1, '2019-03-01', '2019-03-22', 20),
+(2, '2019-02-01', '2019-02-20', 15),
+(2, '2019-02-21', '2019-03-31', 30);
+
+-- Insert data into UnitsSold table
+INSERT INTO UnitsSold (product_id, purchase_date, units) VALUES
+(1, '2019-02-25', 100),
+(1, '2019-03-01', 15),
+(2, '2019-02-10', 200),
+(2, '2019-03-22', 30);
+
+SELECT * from Prices
+SELECT * from UnitsSold
+
+--step 1
+SELECT p.product_id as p_id , u.units as unit , p.price as price
+FROM Prices p
+INNER JOIN UnitsSold u 
+ON (p.product_id = u.product_id) and (u.purchase_date between p.start_date and p.end_date)
+
+--step2 
+SELECT p_id , 
+        SUM(unit*price) as rev , 
+        SUM(unit) as unit_sold
+FROM (SELECT p.product_id as p_id , u.units as unit , p.price as price
+        FROM Prices p
+        INNER JOIN UnitsSold u 
+        ON (p.product_id = u.product_id) and (u.purchase_date between p.start_date and p.end_date)) as temp
+GROUP BY p_id ;
+
+--step 3
+WITH answer as (
+    SELECT p_id , 
+        SUM(unit*price) as rev , 
+        SUM(unit) as unit_sold
+FROM (SELECT p.product_id as p_id , u.units as unit , p.price as price
+        FROM Prices p
+        INNER JOIN UnitsSold u 
+        ON (p.product_id = u.product_id) and (u.purchase_date between p.start_date and p.end_date)) as temp
+GROUP BY p_id 
+)SELECT p_id , ROUND(rev/unit_sold , 2) as AVG_SELLING from answer ;
+
+
+--another way
+SELECT 
+    u.product_id,
+    ROUND(SUM(u.units * p.price) * 1.0 / SUM(u.units), 2) AS average_price
+FROM 
+    UnitsSold u
+JOIN 
+    Prices p
+ON 
+    u.product_id = p.product_id
+    AND u.purchase_date BETWEEN p.start_date AND p.end_date
+GROUP BY 
+    u.product_id;
