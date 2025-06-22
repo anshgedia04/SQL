@@ -374,3 +374,109 @@ ON
     AND u.purchase_date BETWEEN p.start_date AND p.end_date
 GROUP BY 
     u.product_id;
+
+
+--que
+use leetcode
+CREATE TABLE Project (
+    project_id INT,
+    employee_id INT
+);
+
+CREATE TABLE Employees (
+    employee_id INT,
+    name VARCHAR(50),
+    experience_years INT
+);
+
+-- Data for Project table
+INSERT INTO Project (project_id, employee_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 1),
+(2, 4);
+
+-- Data for Employee table
+INSERT INTO Employees (employee_id, name, experience_years) VALUES
+(1, 'Khaled', 3),
+(2, 'Ali', 2),
+(3, 'John', 1),
+(4, 'Doe', 2);
+
+select * from Project;
+select * from Employees;
+
+
+--step 1
+
+select p.project_id , e.employee_id , e.experience_years as avg_p_expp
+from Project p
+INNER JOIN Employees e
+ON p.employee_id = e.employee_id
+
+--step 2
+select temp.p_id, ROUND(AVG(avg_p_expp) , 2) 
+FROM (select p.project_id as p_id, e.employee_id , e.experience_years as avg_p_expp
+        from Project p
+        INNER JOIN Employees e
+        ON p.employee_id = e.employee_id) as temp
+GROUP BY temp.p_id ;
+
+
+--another way to do so
+SELECT p.project_id , ROUND(AVG(e.experience_years),2) as avg_exp
+from Project p
+INNER JOIN  Employees e
+ON p.employee_id = e.employee_id
+GROUP BY p.project_id
+
+use leetcode
+--que
+CREATE TABLE Activitys (
+    player_id INT,
+    device_id INT,
+    event_date DATE,
+    games_played INT,
+    PRIMARY KEY (player_id, event_date)
+);
+
+INSERT INTO Activitys (player_id, device_id, event_date, games_played) VALUES
+(1, 2, '2016-03-01', 5),
+(1, 2, '2016-03-02', 6),
+(2, 3, '2017-06-25', 1),
+(3, 1, '2016-03-02', 0),
+(3, 4, '2018-07-03', 5);
+
+--Find the fraction of players who logged in again exactly the next day after their first login, rounded to 2 decimal places.
+
+--Return a single column: fraction
+
+--step 1
+
+SELECT a.player_id as imp_logged
+FROM Activitys a
+JOIN (
+    SELECT player_id, MIN(event_date) AS first_login
+    FROM Activitys
+    GROUP BY player_id
+) first_day ON a.player_id = first_day.player_id
+WHERE DATEDIFF(a.event_date, first_day.first_login) = 1;
+
+
+--step 2
+with answer as (
+    SELECT a.player_id as imp_logged
+FROM Activitys a
+JOIN (
+    SELECT player_id, MIN(event_date) AS first_login
+    FROM Activitys
+    GROUP BY player_id
+) first_day ON a.player_id = first_day.player_id
+WHERE DATEDIFF(a.event_date, first_day.first_login) = 1
+)SELECT 
+    ROUND(
+        COUNT(DISTINCT imp_logged) * 1.0 / (Select COUNT(DISTINCT(player_id)) from Activitys),
+        2
+    ) AS fraction
+FROM answer
