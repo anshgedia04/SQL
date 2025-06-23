@@ -475,8 +475,112 @@ JOIN (
 ) first_day ON a.player_id = first_day.player_id
 WHERE DATEDIFF(a.event_date, first_day.first_login) = 1
 )SELECT 
+
     ROUND(
         COUNT(DISTINCT imp_logged) * 1.0 / (Select COUNT(DISTINCT(player_id)) from Activitys),
         2
     ) AS fraction
 FROM answer
+
+
+use leetcode--que
+
+CREATE TABLE Products (
+    product_id INT,
+    new_price INT,
+    change_date varchar(20),
+    PRIMARY KEY (product_id, change_date)
+);
+INSERT INTO Products (product_id, new_price, change_date) VALUES
+(1, 20, '2019-08-14'),
+(2, 50, '2019-08-14'),
+(1, 30, '2019-08-15'),
+(1, 35, '2019-08-16'),
+(2, 65, '2019-08-17'),
+(3, 20, '2019-08-18');
+
+
+SELECT * FROM Products;
+
+
+--step1 
+SELECT distinct product_id , max(change_date) as max_date from Products where change_date <= '2019-08-16'  GROUP BY product_id; 
+
+
+--step2
+
+SELECT pc.product_id as p_id, p.new_price as n_price, max_date 
+FROM Products p
+INNER JOIN (SELECT distinct product_id , max(change_date) as max_date from Products where change_date <= '2019-08-16'  GROUP BY product_id) pc
+ON pc.product_id = p.product_id AND p.change_date = pc.max_date
+
+--step 3
+SELECT p.product_id , temp.n_price as new_price
+FROM (SELECT distinct product_id from Products) as p
+LEFT JOIN (SELECT pc.product_id as p_id, p.new_price as n_price, max_date 
+            FROM Products p
+            INNER JOIN (SELECT distinct product_id , max(change_date) as max_date from Products where change_date <= '2019-08-16'  GROUP BY product_id) pc
+            ON pc.product_id = p.product_id AND p.change_date = pc.max_date) as temp
+ON p.product_id = temp.p_id
+
+
+--step4
+SELECT p.product_id , COALESCE(temp.n_price, 10) as new_price
+FROM (SELECT distinct product_id from Products) as p
+LEFT JOIN (SELECT pc.product_id as p_id, p.new_price as n_price, max_date 
+            FROM Products p
+            INNER JOIN (SELECT distinct product_id , max(change_date) as max_date from Products where change_date <= '2019-08-16'  GROUP BY product_id) pc
+            ON pc.product_id = p.product_id AND p.change_date = pc.max_date) as temp
+ON p.product_id = temp.p_id
+
+
+-- que
+
+-- -- You are given a table called Queue that stores information about
+--  people entering an elevator in a specific order. The elevator 
+--  has a maximum total weight limit of 1000 units. Each person has a turn number that determines the sequence in which they try to enter.
+
+-- -- Write an SQL query to find the name of the last person
+--  who can successfully board the elevator without exceeding
+--   the total weight limit of 1000
+use leetcode
+
+CREATE TABLE Queue (
+    person_id INT PRIMARY KEY,
+    person_name VARCHAR(50),
+    weight INT,
+    turn INT
+);
+INSERT INTO Queue (person_id, person_name, weight, turn) VALUES
+(5, 'Alice', 250, 1),
+(4, 'Bob', 175, 5),
+(3, 'Alex', 350, 2),
+(6, 'John Cena', 400, 3),
+(1, 'Winston', 500, 6),
+(2, 'Marie', 200, 4);
+
+
+SELECT * from queue
+
+--step 1
+SELECT person_id,person_name,weight,turn  from queue ORDER BY turn;
+
+--step2
+SELECT person_id,person_name,weight,turn ,SUM(weight) over(ORDER BY turn) as cumulative_weight from queue 
+
+--step 3
+SELECT person_name 
+from (SELECT person_id,person_name,weight,turn ,SUM(weight) over(ORDER BY turn) as cumulative_weight from queue)
+
+
+--step4 
+SELECT person_name 
+from (SELECT person_id,person_name,weight,turn ,SUM(weight) over(ORDER BY turn) as cumulative_weight from queue) as temp
+WHERE cumulative_weight <= 1000
+
+-- step 5 
+
+SELECT person_name 
+from (SELECT person_id,person_name,weight,turn ,SUM(weight) over(ORDER BY turn) as cumulative_weight from queue) as temp
+WHERE cumulative_weight <= 1000
+ORDER BY turn DESC LIMIT 1 ;
